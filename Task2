@@ -1,0 +1,73 @@
+import numpy as np
+from sklearn.model_selection import train_test_split
+import tensorflow as tf
+from tensorflow.keras import layers, models
+
+# 1. Feature Extraction Concept (MFCCs)
+# In a real project, you would use the 'librosa' library to extract features from audio files:
+# import librosa
+# def extract_mfcc(file_path):
+#     audio, sample_rate = librosa.load(file_path, res_type='kaiser_fast')
+#     mfccs = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=40)
+#     return np.mean(mfccs.T, axis=0)
+
+# 2. Prepare simulated MFCC dataset
+# Simulating 40 MFCC features extracted from 200 different audio recordings
+num_samples = 200
+num_features = 40
+X = np.random.rand(num_samples, num_features)
+
+# Simulating labels for 3 emotion classes: 0 (Happy), 1 (Angry), 2 (Sad)
+y = np.random.randint(0, 3, num_samples)
+
+# Split into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 3. Build a Deep Learning Model 
+# Using a Feed-Forward Neural Network for simplicity
+model = models.Sequential([
+    layers.Dense(128, activation='relu', input_shape=(num_features,)),
+    layers.Dropout(0.3), # Helps prevent overfitting
+    layers.Dense(64, activation='relu'),
+    layers.Dense(3, activation='softmax') # 3 output nodes for the 3 emotion classes
+])
+
+# 4. Compile the model
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+# 5. Train the model on the MFCC features
+print("Training the emotion recognition model...")
+model.fit(X_train, y_train, epochs=10, batch_size=8, verbose=1)
+
+# 6. Evaluate the final accuracy
+test_loss, test_acc = model.evaluate(X_test, y_test, verbose=0)
+print(f"\nTest Accuracy on simulated audio data: {test_acc:.4f}")
+
+#Output
+Training the emotion recognition model...
+Epoch 1/10
+/usr/local/lib/python3.12/dist-packages/keras/src/layers/core/dense.py:106: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(activity_regularizer=activity_regularizer, **kwargs)
+20/20 ━━━━━━━━━━━━━━━━━━━━ 2s 3ms/step - accuracy: 0.3063 - loss: 1.1573
+Epoch 2/10
+20/20 ━━━━━━━━━━━━━━━━━━━━ 0s 3ms/step - accuracy: 0.3438 - loss: 1.1030 
+Epoch 3/10
+20/20 ━━━━━━━━━━━━━━━━━━━━ 0s 3ms/step - accuracy: 0.3875 - loss: 1.0800 
+Epoch 4/10
+20/20 ━━━━━━━━━━━━━━━━━━━━ 0s 3ms/step - accuracy: 0.4437 - loss: 1.0737 
+Epoch 5/10
+20/20 ━━━━━━━━━━━━━━━━━━━━ 0s 3ms/step - accuracy: 0.4125 - loss: 1.0702 
+Epoch 6/10
+20/20 ━━━━━━━━━━━━━━━━━━━━ 0s 3ms/step - accuracy: 0.5188 - loss: 1.0401 
+Epoch 7/10
+20/20 ━━━━━━━━━━━━━━━━━━━━ 0s 3ms/step - accuracy: 0.4812 - loss: 1.0539 
+Epoch 8/10
+20/20 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step - accuracy: 0.4750 - loss: 1.0343 
+Epoch 9/10
+20/20 ━━━━━━━━━━━━━━━━━━━━ 0s 3ms/step - accuracy: 0.4688 - loss: 1.0224 
+Epoch 10/10
+20/20 ━━━━━━━━━━━━━━━━━━━━ 0s 3ms/step - accuracy: 0.5500 - loss: 0.9945 
+
+Test Accuracy on simulated audio data: 0.4250
