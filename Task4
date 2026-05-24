@@ -1,0 +1,31 @@
+#task 4
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+# 1. Prepare simulated medical dataset (symptoms, age, test results)
+data = {
+    'age': [45, 60, 35, 50, 65, 28, 55],
+    'blood_pressure': [120, 140, 110, 130, 150, 115, 135],
+    'cholesterol': [200, 240, 180, 220, 260, 190, 230],
+    'disease_present': [0, 1, 0, 0, 1, 0, 1] # 1 = Disease, 0 = No Disease
+}
+df = pd.DataFrame(data)
+
+# 2. Split into features and target
+X = df[['age', 'blood_pressure', 'cholesterol']]
+y = df['disease_present']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 3. Initialize and train the Logistic Regression model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# 4. Predict and evaluate
+predictions = model.predict(X_test)
+print("Accuracy:", accuracy_score(y_test, predictions))
+
+
+#Output
+Accuracy: 1.0
